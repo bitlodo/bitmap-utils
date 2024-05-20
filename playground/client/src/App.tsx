@@ -9,11 +9,11 @@ import Topology from './pages/Topology';
 function App() {
   const navigate = useNavigate();
   return (
-    <div className="container" style={{ height: '100vh' }}>
+    <div className="container" style={{ minHeight: '100vh' }}>
 
-      <div className="sidebar" style={{ height: '100vh' }}>
+      <div className="sidebar" style={{ minHeight: '100vh' }}>
         <div>
-          <h2 className="left">Bitmap Playground</h2>
+          <h2 style={{lineHeight: '1em', fontSize: '1.8em'}}>Bitmap Playground</h2>
           <button className="menu-item" onClick={() => navigate("/")} >Home</button>
           <button className="menu-item" onClick={() => navigate("/2DGeneration")} >2D Preview Generation</button>
           <button className="menu-item" onClick={() => navigate("/3DGeneration")} >3D Preview Generation</button>
