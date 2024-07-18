@@ -27,8 +27,8 @@ function SVGRenderer({ data, style, color = 'orange' }: SVGRendererProps) {
             blockWeight += size * size;
         }
 
-        const blockWidth = Math.ceil(Math.sqrt(blockWeight));
-        const mondrian = new MondrianLayout(blockWidth, blockWidth);
+        const length = Math.ceil(Math.sqrt(blockWeight));
+        const mondrian = new MondrianLayout(length);
         const mondrianSlots: any[] = [];
 
         for (const size of data) {
@@ -42,7 +42,7 @@ function SVGRenderer({ data, style, color = 'orange' }: SVGRendererProps) {
 
         for (let i = 0; i < mondrianSlots.length; i++) {
             const slot = mondrianSlots[i];
-            const scaleValue = slot.r - padd;
+            const scaleValue = slot.size - padd;
 
             const x = slot.position.x;
             const y = slot.position.y;

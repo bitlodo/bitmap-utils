@@ -81,7 +81,7 @@ class Stage {
     camera!: THREE.PerspectiveCamera;
     cameraControls!: OrbitControls;
     mondrian!: MondrianLayout;
-    mondrianSlots!: { position: { x: number, y: number }, r: number }[];
+    mondrianSlots!: { position: { x: number, y: number }, size: number }[];
     canvasSize: { width: number, height: number };
     cubeInstance!: THREE.InstancedMesh;
     composer?: EffectComposer;
@@ -132,9 +132,9 @@ class Stage {
         for (const squareSize of this.data) {
             blockWeight += (squareSize * squareSize);
         }
-        const blockWidth = Math.ceil(Math.sqrt(blockWeight));
+        const length = Math.ceil(Math.sqrt(blockWeight));
 
-        this.mondrian = new MondrianLayout(blockWidth, blockWidth);
+        this.mondrian = new MondrianLayout(length);
         this.mondrianSlots = [];
 
         for (var i = 0; i < this.data.length; i++) {
@@ -164,7 +164,7 @@ class Stage {
         const matrix = new THREE.Matrix4();
         for (var i = 0; i < this.data.length; i++) {
 
-            var scaleValue = this.mondrianSlots[i].r - 0.5;
+            var scaleValue = this.mondrianSlots[i].size - 0.5;
 
             let pos = new THREE.Vector3(this.mondrianSlots[i].position.x, 0, this.mondrianSlots[i].position.y);
             let sca = new THREE.Vector3(scaleValue, scaleValue, scaleValue);

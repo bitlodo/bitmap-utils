@@ -12,7 +12,7 @@ export default function Topology() {
 
             <br/>
             
-            <p>The Bitfeed format uses a mathematical equation using decimal logarithm to reduce the disparity between the transaction values and create a more harmonious visualization:</p>
+            <p>The Bitfeed format uses a mathematical equation using decimal logarithm (log10) to reduce the disparity between the transaction values and create a more harmonious visualization:</p>
 
             <table cellPadding={10} style={{ width: '500px', borderCollapse: 'collapse' }}>
                 <thead>

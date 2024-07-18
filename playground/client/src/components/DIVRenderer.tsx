@@ -25,8 +25,8 @@ function DivRenderer({ data, style, color = 'orange' }: DivRendererProps) {
             blockWeight += size * size;
         }
 
-        const blockWidth = Math.ceil(Math.sqrt(blockWeight));
-        const mondrian = new MondrianLayout(blockWidth, blockWidth);
+        const length = Math.ceil(Math.sqrt(blockWeight));
+        const mondrian = new MondrianLayout(length);
         const mondrianSlots: any[] = [];
 
         for (const size of data) {
@@ -50,7 +50,7 @@ function DivRenderer({ data, style, color = 'orange' }: DivRendererProps) {
             const slot = mondrianSlots[i];
             const x = slot.position.x * scale;
             const y = slot.position.y * scale;
-            const size = (slot.r - padd) * scale;
+            const size = (slot.size - padd) * scale;
 
             const childDiv = document.createElement('div');
 

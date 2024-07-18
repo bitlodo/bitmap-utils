@@ -27,8 +27,8 @@ function CanvasRenderer({ data, style, color = 'orange' }: CanvasRendererProps) 
             blockWeight += size * size;
         }
 
-        const blockWidth = Math.ceil(Math.sqrt(blockWeight));
-        const mondrian = new MondrianLayout(blockWidth, blockWidth);
+        const length = Math.ceil(Math.sqrt(blockWeight));
+        const mondrian = new MondrianLayout(length);
         const mondrianSlots: any[] = [];
 
         for (const size of data) {
@@ -62,7 +62,7 @@ function CanvasRenderer({ data, style, color = 'orange' }: CanvasRendererProps) 
             const slot = mondrianSlots[i];
             const x = slot.position.x * scale;
             const y = slot.position.y * scale;
-            const size = (slot.r - padd) * scale;
+            const size = (slot.size - padd) * scale;
             ctx.fillStyle = color;
             ctx.fillRect(offsetX + x, offsetY + y, size, size);
         }

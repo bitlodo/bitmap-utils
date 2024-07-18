@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Page2DGeneration from './pages/Page2DGeneration'
 import Page3DGeneration from './pages/Page3DGeneration';
 import Topology from './pages/Topology';
+import PageSearch from './pages/PageSearch';
 
 function App() {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ function App() {
           <Route path="/2DGeneration" element={<Page2DGeneration />} />
           <Route path="/3DGeneration" element={<Page3DGeneration />} />
           <Route path="/Topology" element={<Topology />} />
+          <Route path="/Search" element={<PageSearch />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
 
