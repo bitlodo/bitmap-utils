@@ -22,6 +22,8 @@ app.use(compression({
   }
 }))
 
+app.use(express.static(process.env.STATIC_PATH)); //client dist folder
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
