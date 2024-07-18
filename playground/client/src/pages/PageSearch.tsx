@@ -62,7 +62,7 @@ export default function PageSearch() {
                 <h3 style={{ marginBottom: '0px' }}>
                     {bitmapData != undefined && `${bitmapData.bitmap}.bitmap`}
                 </h3>
-                <SVGDebugRenderer color='orange' data={txArray} style={{ maxWidth: '600px', maxHeight: '600px', marginTop: '10px' }} />
+                <SVGDebugRenderer data={txArray} style={{ maxWidth: '600px', maxHeight: '600px', marginTop: '10px' }} />
                 {/* <SVGRenderer color='orange' data={txArray} style={{ maxWidth: `${bitmapData.size[0]*3}px`, maxHeight: `${bitmapData.size[1]*3}px`, border: 'solid 1px', padding: '0px' }} /> */}
                 <textarea readOnly style={{ width: '430px', marginTop: '20px', height: '200px', border: 'solid 0px' }} value={bitmapData != undefined ? JSON.stringify(bitmapData) : ''}></textarea>
 

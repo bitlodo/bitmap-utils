@@ -5,20 +5,12 @@ import MondrianLayout from "../../../../utils/MondrianLayout.js";
 interface SVGDebugRendererProps {
     data: number[] | null;
     style?: any | {};
-    color?: string | undefined;
 }
 
-function SVGDebugRenderer({ data, style, color = 'orange' }: SVGDebugRendererProps) {
+function SVGDebugRenderer({ data, style }: SVGDebugRendererProps) {
 
-    const pallete = ['#47029f', '#6101a4', '#7c06a5', '#9d189c', '#c13c81', '#d6556c', '#ff9438', '#fbce25', '#ffff00']
-    const heatmapColors = [
-        '#FFFF00', // Amarelo
-        '#FFD700', // Ouro
-        '#FFA500', // Laranja
-        '#FF8C00', // Laranja escuro
-        '#FF4500', // Laranja avermelhado
-        '#FF0000'  // Vermelho
-      ];
+    const heatMapPallete = ['#47029f', '#6101a4', '#7c06a5', '#9d189c', '#c13c81', '#d6556c', '#ff9438', '#fbce25', '#ffff00']
+
     const svgRef = useRef<SVGSVGElement>(null);
 
     useEffect(() => {
@@ -61,7 +53,7 @@ function SVGDebugRenderer({ data, style, color = 'orange' }: SVGDebugRendererPro
             rectElement.setAttribute("y", slot.position.y.toString());
             rectElement.setAttribute("width", size.toString());
             rectElement.setAttribute("height", size.toString());
-            rectElement.setAttribute("fill", pallete[slot.size - 1]); // Cor do texto
+            rectElement.setAttribute("fill", heatMapPallete[slot.size - 1]); // Cor do texto
             rectElement.setAttribute("stroke", "black");
             rectElement.setAttribute("stroke-width", strokeWidth);
 

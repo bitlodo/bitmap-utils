@@ -288,8 +288,8 @@ class Stage {
                 if (this.selection.hover == i) continue;
 
                 var s = this.mondrianSlots[i];
-                var containsX = point.x > s.position.x && point.x < s.position.x + s.r;
-                var containsZ = point.z > s.position.y && point.z < s.position.y + s.r;
+                var containsX = point.x > s.position.x && point.x < s.position.x + s.size;
+                var containsZ = point.z > s.position.y && point.z < s.position.y + s.size;
 
                 if (containsX && containsZ) {
                     this.selection.hover = i;
