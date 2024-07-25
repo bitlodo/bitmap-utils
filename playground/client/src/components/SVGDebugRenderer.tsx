@@ -4,10 +4,13 @@ import MondrianLayout from "../../../../utils/MondrianLayout.js";
 
 interface SVGDebugRendererProps {
     data: number[] | null;
+    fillEmpty?: boolean;
+    showSizes?: boolean;
+    margin?: number;
     style?: any | {};
 }
 
-function SVGDebugRenderer({ data, style }: SVGDebugRendererProps) {
+function SVGDebugRenderer({ data, fillEmpty = true, showSizes = true, margin = 0, style }: SVGDebugRendererProps) {
 
     const heatMapPallete = ['#47029f', '#6101a4', '#7c06a5', '#9d189c', '#c13c81', '#d6556c', '#ff9438', '#fbce25', '#ffff00']
 
@@ -16,36 +19,30 @@ function SVGDebugRenderer({ data, style }: SVGDebugRendererProps) {
     useEffect(() => {
         if (!data || !svgRef.current) return;
         renderImage(data);
-    }, [data, svgRef])
+    }, [data, fillEmpty, showSizes, margin, svgRef])
 
     function renderImage(data: number[]) {
 
         if (svgRef.current === null || data == null || data.length == 0) return null;
 
-        let blockWeight = 0;
+        const mondrian = new MondrianLayout(data);
+        const padd = Math.max(Math.min(margin, 1), 0); //margin between squares
 
-        for (const size of data) {
-            blockWeight += size * size;
-        }
-
-        const blockWidth = Math.ceil(Math.sqrt(blockWeight));
-        const mondrian = new MondrianLayout(blockWidth);
-        const mondrianSlots: any[] = [];
-
-        for (const size of data) {
-            const slot = mondrian.place(size);
-            mondrianSlots.push(slot);
-        }
-
-        const padd = 0; //margin between squares
-
-        const strokeWidth = ((mondrian.width/svgRef.current.getBoundingClientRect().width)).toString();
+        const strokeWidth = ((mondrian.width / svgRef.current.getBoundingClientRect().width) / 4).toString();
 
         const groupSlots = document.createElementNS("http://www.w3.org/2000/svg", "g");
         groupSlots.setAttribute("id", 'full')
 
-        for (let i = 0; i < mondrianSlots.length; i++) {
-            const slot = mondrianSlots[i];
+        const rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rectElement.setAttribute("x", "0");
+        rectElement.setAttribute("y", "0");
+        rectElement.setAttribute("width", mondrian.width.toString());
+        rectElement.setAttribute("height", mondrian.height.toString());
+        rectElement.setAttribute("fill", "#E9E8E7");
+        groupSlots.appendChild(rectElement);
+
+        for (let i = 0; i < mondrian.slots.length; i++) {
+            const slot = mondrian.slots[i];
             const size = slot.size - padd;
 
             const rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -53,57 +50,53 @@ function SVGDebugRenderer({ data, style }: SVGDebugRendererProps) {
             rectElement.setAttribute("y", slot.position.y.toString());
             rectElement.setAttribute("width", size.toString());
             rectElement.setAttribute("height", size.toString());
-            rectElement.setAttribute("fill", heatMapPallete[slot.size - 1]); // Cor do texto
+            rectElement.setAttribute("fill", heatMapPallete[slot.size - 1]);
             rectElement.setAttribute("stroke", "black");
             rectElement.setAttribute("stroke-width", strokeWidth);
-
-            const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            // Define a posição do texto no centro do retângulo
-            const textX = slot.position.x + (size) / 2;
-            const textY = slot.position.y + (size) / 2;
-            textElement.setAttribute("x", textX.toString());
-            textElement.setAttribute("y", textY.toString());
-            textElement.setAttribute("text-anchor", "middle"); // Alinhamento do texto no centro
-            textElement.setAttribute("alignment-baseline", "middle"); // Alinhamento do texto no centro
-            textElement.setAttribute("font-size", (slot.size / 2).toString());
-            textElement.setAttribute("fill", "white"); // Cor do texto
-            textElement.setAttribute("fill-opacity", "0.4"); // Cor do texto
-            // textElement.setAttribute("fill", generateColor2(slot.r, -8)); // Cor do texto
-
-            // Define o texto que você deseja exibir (substitua 'seuNumero' pelo número real)
-            const textContent = document.createTextNode(slot.size);
-            textElement.appendChild(textContent);
-
-            // Adiciona o elemento de texto como filho do elemento de retângulo
-            // groupTextElement.appendChild(textElement);
-            // groupTextElement.setAttribute('opacity', showDetails ? '1' : '0')
-
-
-
             groupSlots.appendChild(rectElement);
-            groupSlots.appendChild(textElement);
+
+            if (showSizes) {
+                const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                const textX = slot.position.x + (size) / 2;
+                const textY = slot.position.y + (size) / 2;
+                textElement.setAttribute("x", textX.toString());
+                textElement.setAttribute("y", textY.toString());
+                textElement.setAttribute("text-anchor", "middle");
+                textElement.setAttribute("alignment-baseline", "middle");
+                textElement.setAttribute("font-size", (slot.size / 2).toString());
+                textElement.setAttribute("fill", "white");
+                textElement.setAttribute("fill-opacity", "0.4");
+
+                const textContent = document.createTextNode(slot.size);
+                textElement.appendChild(textContent);
+                groupSlots.appendChild(textElement);
+            }
         }
 
         const groupEmpty = document.createElementNS("http://www.w3.org/2000/svg", "g");
         groupEmpty.setAttribute("id", 'empty')
 
-        const filledSlots = mondrian.fillEmptySpaces();
 
-        for (let i = 0; i < filledSlots.length; i++) {
-            const slot = filledSlots[i];
-            const size = slot.size - padd;
+        if (fillEmpty) {
 
-            const rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            rectElement.setAttribute("x", slot.position.x.toString());
-            rectElement.setAttribute("y", slot.position.y.toString());
-            rectElement.setAttribute("width", size.toString());
-            rectElement.setAttribute("height", size.toString());
-            rectElement.setAttribute("fill", 'gray'); // Cor do texto
-            rectElement.setAttribute("stroke", "black");
-            rectElement.setAttribute("stroke-width", strokeWidth);
-            groupEmpty.appendChild(rectElement);
+
+            const filledSlots = mondrian.fillEmptySpaces();
+
+            for (let i = 0; i < filledSlots.length; i++) {
+                const slot = filledSlots[i];
+                const size = slot.size - padd;
+
+                const rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rectElement.setAttribute("x", slot.position.x.toString());
+                rectElement.setAttribute("y", slot.position.y.toString());
+                rectElement.setAttribute("width", size.toString());
+                rectElement.setAttribute("height", size.toString());
+                rectElement.setAttribute("fill", "none");
+                rectElement.setAttribute("stroke", "gray");
+                rectElement.setAttribute("stroke-width", strokeWidth);
+                groupEmpty.appendChild(rectElement);
+            }
         }
-
         const childrenCopy = [...svgRef.current.children];
         for (const element of childrenCopy) {
             svgRef.current.removeChild(element);

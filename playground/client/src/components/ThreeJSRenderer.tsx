@@ -81,10 +81,10 @@ class Stage {
     camera!: THREE.PerspectiveCamera;
     cameraControls!: OrbitControls;
     mondrian!: MondrianLayout;
-    mondrianSlots!: { position: { x: number, y: number }, size: number }[];
     canvasSize: { width: number, height: number };
     cubeInstance!: THREE.InstancedMesh;
     composer?: EffectComposer;
+    // SAO?: SAOPass;
     light?: THREE.DirectionalLight;
     animFrame?: number;
     selection: { hover: number, selected: number } = { hover: -1, selected: -1 }
@@ -102,7 +102,7 @@ class Stage {
         this.onTxHoverCallback = onTxHoverCallback;
         this.onTxSelectCallback = onTxSelectCallback;
 
-        this.calculateBlockLayout();
+        this.mondrian = new MondrianLayout(data);
         this.initializeStage();
         this.generateGeometry()
         this.registerEvents();
@@ -127,22 +127,6 @@ class Stage {
         this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement);
     }
 
-    calculateBlockLayout() {
-        var blockWeight = 0;
-        for (const squareSize of this.data) {
-            blockWeight += (squareSize * squareSize);
-        }
-        const length = Math.ceil(Math.sqrt(blockWeight));
-
-        this.mondrian = new MondrianLayout(length);
-        this.mondrianSlots = [];
-
-        for (var i = 0; i < this.data.length; i++) {
-            let slot = this.mondrian.place(this.data[i]);
-            this.mondrianSlots.push(slot);
-        }
-    }
-
     generateGeometry() {
 
         var mat = new THREE.MeshPhongMaterial();
@@ -164,9 +148,9 @@ class Stage {
         const matrix = new THREE.Matrix4();
         for (var i = 0; i < this.data.length; i++) {
 
-            var scaleValue = this.mondrianSlots[i].size - 0.5;
+            var scaleValue = this.mondrian.slots[i].size - 0.5;
 
-            let pos = new THREE.Vector3(this.mondrianSlots[i].position.x, 0, this.mondrianSlots[i].position.y);
+            let pos = new THREE.Vector3(this.mondrian.slots[i].position.x, 0, this.mondrian.slots[i].position.y);
             let sca = new THREE.Vector3(scaleValue, scaleValue, scaleValue);
             let rot = new THREE.Quaternion();
 
@@ -209,6 +193,7 @@ class Stage {
         this.scene.add(aLight);
 
         this.camera.updateProjectionMatrix();
+        this.fitCameraToSelection(this.camera, this.cameraControls, maxSize, maxHeight, 1.5);
 
         this.composer = new EffectComposer(this.renderer)
         this.composer.setSize(this.canvasSize.width, this.canvasSize.height)
@@ -216,19 +201,17 @@ class Stage {
         const renderPass = new SSAARenderPass(this.scene, this.camera);
         this.composer.addPass(renderPass)
 
+
         const SAO = new SAOPass(this.scene, this.camera)
-        SAO.params.saoIntensity = 0.005
+        SAO.params.saoIntensity = 1 / maxSize / 50
         SAO.params.saoScale = 50
         SAO.params.saoKernelRadius = 30
-        SAO.params.saoMinResolution = 0.00005
+        SAO.params.saoMinResolution = 0.0000005
         SAO.params.saoBlurRadius = 10;
         SAO.params.saoBlurStdDev = 5;
-        SAO.params.saoBlurDepthCutoff = 0.00005;
+        SAO.params.saoBlurDepthCutoff = 0.00001;
 
         this.composer.addPass(SAO)
-
-        this.fitCameraToSelection(this.camera, this.cameraControls, maxSize, maxHeight, 1.5);
-
         this.cameraControls.saveState();
     }
 
@@ -283,11 +266,11 @@ class Stage {
             var localPoint = intersects[0].object.worldToLocal(intersects[0].point).sub(intersects[0].normal?.divideScalar(4) ?? new THREE.Vector3());
             var point = { x: Number((localPoint.x).toFixed(1)), y: 0, z: Number((localPoint.z).toFixed(1)) };
 
-            for (var i = 0; i < this.mondrianSlots.length; i++) {
+            for (var i = 0; i < this.mondrian.slots.length; i++) {
 
                 if (this.selection.hover == i) continue;
 
-                var s = this.mondrianSlots[i];
+                var s = this.mondrian.slots[i];
                 var containsX = point.x > s.position.x && point.x < s.position.x + s.size;
                 var containsZ = point.z > s.position.y && point.z < s.position.y + s.size;
 

@@ -21,30 +21,18 @@ function CanvasRenderer({ data, style, color = 'orange' }: CanvasRendererProps) 
 
         if (canvasRef.current === null || data == null || data.length == 0) return null;
 
-        let blockWeight = 0;
-
-        for (const size of data) {
-            blockWeight += size * size;
-        }
-
-        const length = Math.ceil(Math.sqrt(blockWeight));
-        const mondrian = new MondrianLayout(length);
-        const mondrianSlots: any[] = [];
-
-        for (const size of data) {
-            const slot = mondrian.place(size);
-            mondrianSlots.push(slot);
-        }
-
+        
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-
+        
         if (!ctx) {
             console.log("No context")
             return;
         }
-
+        
         const clientRect = canvas.getBoundingClientRect();
+        
+        const mondrian = new MondrianLayout(data);
         const padd = 0.5; //margin between squares
         const mondrianSize = mondrian.getSize();
         
@@ -58,8 +46,8 @@ function CanvasRenderer({ data, style, color = 'orange' }: CanvasRendererProps) 
         canvas.width = clientRect.width;
         canvas.height = clientRect.height;
 
-        for (let i = 0; i < mondrianSlots.length; i++) {
-            const slot = mondrianSlots[i];
+        for (let i = 0; i < mondrian.slots.length; i++) {
+            const slot = mondrian.slots[i];
             const x = slot.position.x * scale;
             const y = slot.position.y * scale;
             const size = (slot.size - padd) * scale;

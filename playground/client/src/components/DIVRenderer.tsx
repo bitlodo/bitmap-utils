@@ -20,20 +20,7 @@ function DivRenderer({ data, style, color = 'orange' }: DivRendererProps) {
     function renderImage(data: number[]) {
         if (!parentRef.current || !data || data.length === 0) return;
 
-        let blockWeight = 0;
-        for (const size of data) {
-            blockWeight += size * size;
-        }
-
-        const length = Math.ceil(Math.sqrt(blockWeight));
-        const mondrian = new MondrianLayout(length);
-        const mondrianSlots: any[] = [];
-
-        for (const size of data) {
-            const slot = mondrian.place(size);
-            mondrianSlots.push(slot);
-        }
-
+        const mondrian = new MondrianLayout(data);
         const padd = 0.5; //margin between squares
         const mondrianSize = mondrian.getSize();
 
@@ -46,8 +33,8 @@ function DivRenderer({ data, style, color = 'orange' }: DivRendererProps) {
 
         parentRef.current.innerHTML = '';
 
-        for (let i = 0; i < mondrianSlots.length; i++) {
-            const slot = mondrianSlots[i];
+        for (let i = 0; i < mondrian.slots.length; i++) {
+            const slot = mondrian.slots[i];
             const x = slot.position.x * scale;
             const y = slot.position.y * scale;
             const size = (slot.size - padd) * scale;
@@ -62,7 +49,7 @@ function DivRenderer({ data, style, color = 'orange' }: DivRendererProps) {
             childDiv.style.height = `${size}px`;
             childDiv.style.backgroundColor = color;
 
-            childDiv.onmouseover = () => { childDiv.style.backgroundColor = 'red';  childDiv.textContent = `Parcel ${i}`; }
+            childDiv.onmouseover = () => { childDiv.style.backgroundColor = 'red';  childDiv.textContent = `${i}`; }
             childDiv.onmouseout = () => { childDiv.style.backgroundColor = color; childDiv.textContent = ``;}
             childDiv.onclick = () => { console.log(`Clicked on parcel ${i}`)}
             

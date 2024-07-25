@@ -1,4 +1,5 @@
-import 'dotenv/config'
+import 'dotenv/config';
+import path from 'path';
 import express from 'express';
 import cors from "cors";
 import compression from 'compression';
@@ -22,13 +23,14 @@ app.use(compression({
   }
 }))
 
-app.use(express.static(process.env.STATIC_PATH)); //client dist folder
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+//set client dist folder as public dir
+app.use(express.static(process.env.STATIC_PATH)); 
 
 app.use('/api/v1/', bitmapRouter);
+
+//support for react router
+app.get('*', (req, res) => { res.sendFile(path.join(process.env.STATIC_PATH, 'index.html')); }); 
+
 
 async function main() {
   try {

@@ -1,24 +1,26 @@
 import './App.css'
-import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import ImgGithub from './assets/github-mark.svg';
 import Home from './pages/Home';
-import Page2DGeneration from './pages/Page2DGeneration'
-import Page3DGeneration from './pages/Page3DGeneration';
 import Topology from './pages/Topology';
 import PageSearch from './pages/PageSearch';
+import ReactComponents from './pages/ReactComponents';
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const selectedMenu = (menu: string) => location.pathname === menu ? "menu-item menu-item-selected" : "menu-item";
+
   return (
     <div className="container" style={{ minHeight: '100vh' }}>
 
       <div className="sidebar" style={{ minHeight: '100vh' }}>
         <div>
-          <h2 style={{lineHeight: '1em', fontSize: '1.8em'}}>Bitmap Playground</h2>
-          <button className="menu-item" onClick={() => navigate("/")} >Home</button>
-          <button className="menu-item" onClick={() => navigate("/2DGeneration")} >2D Preview Generation</button>
-          <button className="menu-item" onClick={() => navigate("/3DGeneration")} >3D Preview Generation</button>
-          <button className="menu-item" onClick={() => navigate("/Topology")} >Topology</button>
+          <h2 style={{ lineHeight: '1em', fontSize: '1.8em' }}>Bitmap Playground</h2>
+          <button className={selectedMenu("/")} onClick={() => navigate("/")} >Home</button>
+          <button className={selectedMenu("/database")} onClick={() => navigate("/database")} >Database Search</button>
+          <button className={selectedMenu("/components")} onClick={() => navigate("/components")} >React Components</button>
+          <button className={selectedMenu("/topology")} onClick={() => navigate("/topology")} >Topology</button>
 
           <div style={{ marginTop: '20px', alignContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <button onClick={() => window.open('https://github.com/bitlodo/bitmap-utils', '_blank')} style={{ textDecoration: 'none', textAlign: 'center', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: '10px' }}>
@@ -37,10 +39,9 @@ function App() {
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="/" element={<Home />} />
-          <Route path="/2DGeneration" element={<Page2DGeneration />} />
-          <Route path="/3DGeneration" element={<Page3DGeneration />} />
-          <Route path="/Topology" element={<Topology />} />
-          <Route path="/Search" element={<PageSearch />} />
+          <Route path="/database" element={<PageSearch />} />
+          <Route path="/components" element={<ReactComponents />} />
+          <Route path="/topology" element={<Topology />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
 

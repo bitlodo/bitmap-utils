@@ -1,13 +1,23 @@
 // Adapted from https://github.com/bitfeed-project/bitfeed/blob/master/client/src/models/TxMondrianPoolScene.js by @mononaut
 
 export default class MondrianLayout {
-    constructor(length) {
-        this.length = length;
+    constructor(txList = []) {
         this.width = 0;
         this.height = 0;
         this.rowOffset = 0;
         this.rows = [];
         this.slots = [];
+
+        let blockWeight = 0;
+        for (const size of txList) {
+            blockWeight += size * size;
+        }
+
+        this.length = Math.ceil(Math.sqrt(blockWeight));
+
+        for (const size of txList) {
+            this.place(size);
+        }
     }
 
     getSize() {

@@ -21,27 +21,13 @@ function SVGRenderer({ data, style, color = 'orange' }: SVGRendererProps) {
 
         if (svgRef.current === null || data == null || data.length == 0) return null;
 
-        let blockWeight = 0;
-
-        for (const size of data) {
-            blockWeight += size * size;
-        }
-
-        const length = Math.ceil(Math.sqrt(blockWeight));
-        const mondrian = new MondrianLayout(length);
-        const mondrianSlots: any[] = [];
-
-        for (const size of data) {
-            const slot = mondrian.place(size);
-            mondrianSlots.push(slot);
-        }
-
+        const mondrian = new MondrianLayout(data);
         const padd = 0.5; //margin between squares
 
         let pathData = "";
 
-        for (let i = 0; i < mondrianSlots.length; i++) {
-            const slot = mondrianSlots[i];
+        for (let i = 0; i < mondrian.slots.length; i++) {
+            const slot = mondrian.slots[i];
             const scaleValue = slot.size - padd;
 
             const x = slot.position.x;
