@@ -24,7 +24,7 @@ To generate pure bitmap image data, create a MondrianLayout object using your ar
 
 ---
 
-**Bitmap Playground** - Demo: https://bitmap-playground.vercel.app
+**Bitmap Playground** - Demo: https://playground.bitlords.land
 
 This is a client/server example you will find in the folder playground.
 
