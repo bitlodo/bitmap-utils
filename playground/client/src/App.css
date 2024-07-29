@@ -53,3 +53,15 @@
 .card {
   padding: 2em;
 }
+
+.code {
+  background-color: #eeeeee;
+  border: solid 1px rgb(190, 182, 182);
+  width: 600px;
+  text-align: left;
+  padding: 20px
+}
+
+.code .comment {
+  color: rgb(159, 159, 152);
+}

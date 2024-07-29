@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate, useLocation, Navigate } from 'react-router-
 import ImgGithub from './assets/github-mark.svg';
 import Home from './pages/Home';
 import Topology from './pages/Topology';
-import PageSearch from './pages/PageSearch';
+import DatabaseSearch from './pages/DatabaseSearch';
 import ReactComponents from './pages/ReactComponents';
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
         <div>
           <h2 style={{ lineHeight: '1em', fontSize: '1.8em' }}>Bitmap Playground</h2>
           <button className={selectedMenu("/")} onClick={() => navigate("/")} >Home</button>
-          <button className={selectedMenu("/database")} onClick={() => navigate("/database")} >Database Search</button>
+          <button className={selectedMenu("/database")} onClick={() => navigate("/database")} >Bitmap Preview DB</button>
           <button className={selectedMenu("/components")} onClick={() => navigate("/components")} >React Components</button>
           <button className={selectedMenu("/topology")} onClick={() => navigate("/topology")} >Topology</button>
 
@@ -39,7 +39,7 @@ function App() {
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="/" element={<Home />} />
-          <Route path="/database" element={<PageSearch />} />
+          <Route path="/database" element={<DatabaseSearch />} />
           <Route path="/components" element={<ReactComponents />} />
           <Route path="/topology" element={<Topology />} />
           <Route path="*" element={<Navigate replace to="/" />} />

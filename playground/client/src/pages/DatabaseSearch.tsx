@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import SVGDebugRenderer from '../components/SVGDebugRenderer'
 
-export default function PageSearch() {
+export default function DatabaseSearch() {
     const [txArray, setTxArray] = useState([1])
     const [debugFillEmpty, setDebugFillEmpty] = useState(false)
     const [debugShowSizes, setDebugShowSizes] = useState(true)
     const [debugMargin, setDebugMargin] = useState(0)
-    const [bitmapInput, setBitmapInput] = useState('123456')
+    const [bitmapInput, setBitmapInput] = useState('50886')
     const [bitmapData, setBitmapData] = useState({ bitmap: undefined, tx: [], size: [] })
 
     async function loadBitmap(bitmap: string) {
@@ -28,9 +28,12 @@ export default function PageSearch() {
         <>
             <h2 style={{ marginBottom: '0px' }}>BITMAP PREVIEW DATABASE</h2>
             <span>
-                840000 pre-calculated tx array data
+                840000 pre-calculated bitmaps (tx data) for use in the bitmap preview image (Mondrian Layout) generation<br />
             </span>
+
             <br />
+
+            <b>Files available here</b>: <a href='https://github.com/bitlodo/bitmap-utils/releases' target='_blank'>https://github.com/bitlodo/bitmap-utils/releases</a>
 
 
             <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
@@ -122,7 +125,31 @@ export default function PageSearch() {
 
             <br />
             <span>
-                The database has 3 colums: bitmap (block height), tx (array of tx values converted to log10), size (width x height of the final preview image, using the tx value (log10) as units).
+                <b>DATABASE SCHEMA</b><br/>
+                <pre>bitmap INTEGER PRIMARY KEY, tx INTEGER[], size INTEGER[], pattern INTEGER</pre>
+                
+                <br/><br/>
+
+                <b>bitmap</b><br/>
+                Block height of the bitmap.
+                <br/><br/>
+
+                <b>tx</b><br/>
+                TX value array in log10.<br/>
+                Useful for generating preview images.
+                <br/><br/>
+
+                <b>size</b><br/>
+                Pre-calculated preview image size (width x height).<br/>
+                Useful for allocating the bitmap in a 2D map.
+                <br/><br/>
+
+                <b>pattern</b><br/>
+                Block height of the first occurrence of this pattern.<br/>
+                Useful for grouping images by shape (aka bitmons)
+                <br/><br/>
+                {/* CSV format ........... 344 MB (2,78 GB uncompressed)
+                DuckDB format ... 370 MB */}
             </span>
         </>
     )
